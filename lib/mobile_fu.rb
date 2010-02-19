@@ -12,6 +12,10 @@ module ActionController
                           'docomo|kddi|softbank|pdxgw|j-phone|astel|minimo|plucker|netfront|' +
                           'xiino|mot-v|mot-e|portalmmm|sagem|sie-s|sie-m|android|ipod'
     
+    # These are various strings that can be found in touch devices. They are used to 
+    # serve jqtouch views           
+    TOUCH_USER_AGENTS = 'iphone|ipod|palm|android'
+    
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -40,6 +44,8 @@ module ActionController
         end
 
         helper_method :is_mobile_device?
+        helper_method :is_touch_device?
+        helper_method :in_touch_view?
         helper_method :in_mobile_view?
         helper_method :is_device?
       end
@@ -66,10 +72,13 @@ module ActionController
         session[:mobile_view] = true if session[:mobile_view].nil?
       end
       
-      # Determines the request format based on whether the device is mobile or if
+      # Determines the request format based on whether the device is mobile, touch or if
       # the user has opted to use either the 'Standard' view or 'Mobile' view.
       
       def set_mobile_format
+        if is_touch_device?
+          request.format = session[:touch_view] == false ? :html : :touch
+          session[:touch_view] = true if session[:touch_view].nil?
         if is_mobile_device?
           request.format = session[:mobile_view] == false ? :html : :mobile
           session[:mobile_view] = true if session[:mobile_view].nil?
@@ -81,6 +90,19 @@ module ActionController
       
       def in_mobile_view?
         request.format.to_sym == :mobile
+      end
+      
+       # Returns either true or false depending on whether or not the format of the
+        # request is either :touch or not.
+        
+      def in_touch_view?
+        request.format.to_sym == :touch
+      end
+      
+         # Returns either true or false depending on whether or not the user agent of
+          # the device making the request is matched to a touch-device in our regex.
+      def is_touch_device?
+        request.user_agent.to_s.downcase =~~ TOUCH_USER_AGENTS
       end
       
       # Returns either true or false depending on whether or not the user agent of
