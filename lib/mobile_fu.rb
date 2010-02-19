@@ -79,7 +79,7 @@ module ActionController
         if is_touch_device?
           request.format = session[:touch_view] == false ? :html : :touch
           session[:touch_view] = true if session[:touch_view].nil?
-        if is_mobile_device?
+        elsif is_mobile_device?
           request.format = session[:mobile_view] == false ? :html : :mobile
           session[:mobile_view] = true if session[:mobile_view].nil?
         end
