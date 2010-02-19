@@ -102,7 +102,7 @@ module ActionController
          # Returns either true or false depending on whether or not the user agent of
           # the device making the request is matched to a touch-device in our regex.
       def is_touch_device?
-        request.user_agent.to_s.downcase =~~ TOUCH_USER_AGENTS
+        request.user_agent.to_s.downcase =~ Regexp.new(ActionController::MobileFu::TOUCH_USER_AGENTS)
       end
       
       # Returns either true or false depending on whether or not the user agent of
