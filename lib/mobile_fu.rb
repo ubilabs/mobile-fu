@@ -40,7 +40,7 @@ module ActionController
         if test_mode
           before_filter :force_mobile_format
         else
-          before_filter :set_mobile_format
+          before_filter :set_mobile_format, :unless => :ipad?
         end
 
         helper_method :is_mobile_device?
@@ -64,6 +64,9 @@ module ActionController
     
     module InstanceMethods
       
+      def ipad?
+        request.user_agent.to_s.downcase =~ /ipad/
+      end
     
       # Forces the request format to be mobile
       def force_mobile_format
