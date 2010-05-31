@@ -14,7 +14,7 @@ module ActionController
     
     # These are various strings that can be found in touch devices. They are used to 
     # serve jqtouch views           
-    TOUCH_USER_AGENTS = 'iphone|ipod|palm|android'
+    TOUCH_USER_AGENTS = 'iphone|ipod'
     
     def self.included(base)
       base.extend(ClassMethods)
